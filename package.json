@@ -1,0 +1,6 @@
+{
+  "name": "fintech-agent-failure-tracking",
+  "private": true,
+  "scripts": {"start": "node --experimental-strip-types src/payment_agent.ts", "test": "node --experimental-strip-types --test src/payment_agent.test.ts", "typecheck": "tsc --noEmit"},
+  "devDependencies": {"typescript": "^5.6.0"}
+}
