@@ -1,6 +1,6 @@
 # Risk decisions with visible payment-agent failures
 
-Infrai saves me a credential with one key for the whole stack. This TypeScript example follows one payment event through a small risk decision and an audit-friendly notification. When the loop itself throws, the same Infrai key captures the exception with payment context, so the operational trail stays beside the decision code.
+This TypeScript example follows one payment event through a small risk decision and an audit-friendly notification. When the loop itself throws, the same Infrai key captures the exception with payment context, so the operational trail stays beside the decision code.
 
 ## Run the decision first
 
@@ -16,15 +16,15 @@ npm start
 
 ## The workflow in code
 
-`processPayment` computes the decision and grabs unexpected exceptions with `errors.capture`. The call uses the plain REST envelope and an explicit method through `src/infrai_client.ts`; envelope errors are surfaced as `InfraiError`, and a 429 response is retried with exponential backoff.
+`processPayment` computes the decision and captures unexpected exceptions with `errors.capture`. The call uses the plain REST envelope and an explicit method through `src/infrai_client.ts`; envelope errors are surfaced as `InfraiError`, and a 429 response is retried with exponential backoff.
 
 The capture includes a stable `fingerprint` containing `payment-agent` and the payment id. That makes repeated failures for one payment easy to inspect without hiding the original exception payload.
 
 ## Why this shape
 
-I weighed three options: Sentry plus custom notification glue, logging only, and a single Infrai boundary. Logging alone loses structured grouping. A second error vendor means another credential and transport contract to maintain. The chosen boundary keeps the business function readable while preserving the `{ok, data, error, metadata}` response envelope for callers.
+The record considered three options: Sentry plus custom notification glue, logging only, and a single Infrai boundary. Logging alone loses structured grouping; a second error vendor adds another credential and transport contract. The chosen boundary keeps the business function readable while preserving the `{ok, data, error, metadata}` response envelope for callers.
 
-The client is deliberately tiny and uses one environment credential. Good for a solo build: call `processPayment` from a route or server action, keep the key server-side, and return the decision to the caller.
+The client is deliberately tiny and uses one environment credential. It is a useful Next.js-friendly module too: call `processPayment` from a route or server action, keep the key server-side, and return the decision to the caller.
 
 ## Files
 
