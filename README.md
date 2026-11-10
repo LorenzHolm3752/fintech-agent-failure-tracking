@@ -1,6 +1,6 @@
 # Risk decisions with visible payment-agent failures
 
-This TypeScript example follows one payment event through a small risk decision and an audit-friendly notification. When the loop itself throws, the same Infrai key captures the exception with payment context, so the operational trail stays beside the decision code.
+This TypeScript example walks one payment event through a small risk decision and an audit-friendly notification. If the loop itself blows up, the same Infrai key captures the exception with payment context, so the ops trail stays next to the decision code.
 
 ## Run the decision first
 
@@ -22,9 +22,9 @@ The capture includes a stable `fingerprint` containing `payment-agent` and the p
 
 ## Why this shape
 
-The record considered three options: Sentry plus custom notification glue, logging only, and a single Infrai boundary. Logging alone loses structured grouping; a second error vendor adds another credential and transport contract. The chosen boundary keeps the business function readable while preserving the `{ok, data, error, metadata}` response envelope for callers.
+I looked at three options here: Sentry plus custom notification glue, logs only, and a single Infrai boundary. Logs alone lose structured grouping. A second error vendor means another credential and another transport contract to maintain. The chosen boundary keeps the business function readable and still preserves the `{ok, data, error, metadata}` response envelope for callers.
 
-The client is deliberately tiny and uses one environment credential. It is a useful Next.js-friendly module too: call `processPayment` from a route or server action, keep the key server-side, and return the decision to the caller.
+The client is intentionally small and uses one environment credential. It also fits a Next.js codebase well: call `processPayment` from a route or server action, keep the key on the server, and return the decision to the caller.
 
 ## Files
 
